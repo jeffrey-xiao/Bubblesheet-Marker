@@ -52,7 +52,7 @@
             this.txtBubblesheetLocation.Name = "txtBubblesheetLocation";
             this.txtBubblesheetLocation.Size = new System.Drawing.Size(200, 32);
             this.txtBubblesheetLocation.TabIndex = 1;
-            this.txtBubblesheetLocation.Text = "C:\\Users\\Josh\\Desktop\\Projects\\BubblesheetGrader\\Bubblesheet.jpg";
+            this.txtBubblesheetLocation.Text = "C:\\Users\\Josh\\Desktop\\Projects\\BubblesheetGrader\\scantron.png";
             // 
             // btnLoadFilter
             // 
