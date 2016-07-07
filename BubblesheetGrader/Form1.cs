@@ -34,6 +34,15 @@ namespace BubblesheetGrader
         private List<float> _boxValues = new List<float>();
         private char[] _answers;
 
+
+        private float _bestSize = 0;
+        int bestX = 0, bestY = 0;
+        private float _bestValue = -99999;
+        bool filterDone = false;
+        bool drawBest = false;
+
+        bool answersFound = false;
+
         public Form1()
         {
             InitializeComponent();
@@ -41,6 +50,14 @@ namespace BubblesheetGrader
 
         private void btnLoadImage_Click(object sender, EventArgs e)
         {
+            _questionBoxes.Clear();
+            _boxValues.Clear();
+            filterDone = false;
+            drawBest = false;
+            _bestValue = -99999f;
+            answersFound = false;
+
+
             string fileLocation = txtBubblesheetLocation.Text;
 
             if (!File.Exists(fileLocation))
@@ -142,6 +159,7 @@ namespace BubblesheetGrader
             //}
 
             _fileLoaded = true;
+            this.Text = "Image Loaded";
         }
 
         private void btnLoadFilter_Click(object sender, EventArgs e)
@@ -159,7 +177,7 @@ namespace BubblesheetGrader
                     string[] s = reader.ReadLine().Split();
                     for (int j = 0; j < _filterHeight; ++j)
                     {
-                        _filter[i, j] = (float)int.Parse(s[j]) / 255 * 2 - 1;
+                        _filter[i, j] = (float)int.Parse(s[j]) / 255 * 2 - 1.8F;
                     }
                 }
             }
@@ -167,11 +185,6 @@ namespace BubblesheetGrader
             _filterLoaded = true;
             Refresh();
         }
-
-        private float _bestSize = 0;
-        int bestX = 0, bestY = 0;
-        private float _bestValue = -99999;
-        bool filterDone = false;
 
         float Contrast(float x)
         {
@@ -203,12 +216,11 @@ namespace BubblesheetGrader
             FindQuestionboxes();
         }
 
-        bool drawBest = false;
 
         private void FindQuestionboxes()
         {
             float[,] filter = ResizeFilter(_bestSize);
-            float cutoff = _bestValue * 0.92F;
+            float cutoff = _bestValue * 0.90F;
             int nextI = _imgWidth-filter.GetLength(0)-1;
             for (int i = _imgWidth-filter.GetLength(0)-1; i>=0; i=nextI)
             {
@@ -249,8 +261,6 @@ namespace BubblesheetGrader
             Refresh();
         }
 
-        bool answersFound = false;
-
         private void FindAnswers()
         {
             int width = (int)(_bestSize * _filterWidth), height = (int)(_bestSize * _filterHeight);
@@ -277,7 +287,7 @@ namespace BubblesheetGrader
                     }
                 }
                 bestAvg /= width * height / 4;
-                if (bestAvg > 0.25F)
+                if (bestAvg > -0.05F)
                     _answers[i] = 'N';
                 else if (bestIdx == 0)
                     _answers[i] = 'A';
