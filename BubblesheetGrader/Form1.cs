@@ -125,8 +125,7 @@ namespace BubblesheetGrader
                     }
 
                     float avg = total / cnt;
-                    if (_image[i, j] > avg) newImage[i, j] = 1;
-                    else newImage[i, j] = -1;
+                    newImage[i, j] = (float)Math.Tanh(_image[i, j] - avg);
                 }
             }
 
@@ -165,6 +164,7 @@ namespace BubblesheetGrader
             }
 
             _filterLoaded = true;
+            Refresh();
         }
 
         private float _bestSize = 0;
@@ -309,6 +309,7 @@ namespace BubblesheetGrader
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
+            _fileLoaded = true;
             if (_fileLoaded)
             {
                 //e.Graphics.DrawImage(_bubbleSheet, 0, 0);
@@ -332,19 +333,19 @@ namespace BubblesheetGrader
             {
                 e.Graphics.DrawRectangle(Pens.Red, bestX, bestY, _bestSize * _filterWidth, _bestSize * _filterHeight);
             }
-            //if (_filterLoaded)
-            //{
-            //    _fileLoaded = false;
-            //    float[,] filter = ResizeFilter(0.2F);
-            //    for (int i = 0; i < filter.GetLength(0); ++i)
-            //    {
-            //        for (int j = 0; j < filter.GetLength(1); ++j)
-            //        {
-            //            Pen p = new Pen(Color.FromArgb((int)(filter[i, j] * 255), (int)(filter[i, j] * 255), (int)(filter[i, j] * 255)));
-            //            e.Graphics.DrawRectangle(p, i*5, j*5, 5, 5);
-            //        }
-            //    }
-            //}
+            if (_filterLoaded)
+            {
+                _fileLoaded = false;
+                float[,] filter = ResizeFilter(_bestSize);
+                for (int i = 0; i < filter.GetLength(0); ++i)
+                {
+                    for (int j = 0; j < filter.GetLength(1); ++j)
+                    {
+                        Pen p = new Pen(Color.FromArgb((int)((filter[i, j] + 1) * 127), (int)((filter[i, j] + 1) * 127), (int)((filter[i, j] + 1) * 127)));
+                        e.Graphics.DrawRectangle(p, bestX+ _bestSize * _filterWidth+i * 1, bestY+j * 1, 1, 1);
+                    }
+                }
+            }
         }
     }
 }
