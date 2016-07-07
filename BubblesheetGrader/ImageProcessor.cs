@@ -10,7 +10,7 @@ namespace BubblesheetGrader
     {
         public static float[,] ResizeImage(float[,] img)
         {
-            if (img.GetLength(0) * img.GetLength(1) <= 2e6)
+            if (img.GetLength(0) * img.GetLength(1) <= 5e5)
                 return img;
             float[,] resized = new float[img.GetLength(0) / 2, img.GetLength(1) / 2];
             for (int i = 0; i < img.GetLength(0) / 2; ++i)

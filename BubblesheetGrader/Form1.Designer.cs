@@ -33,11 +33,15 @@
             this.btnLoadFilter = new System.Windows.Forms.Button();
             this.txtFilterLocation = new System.Windows.Forms.TextBox();
             this.btnRunFilter = new System.Windows.Forms.Button();
+            this.txtScale = new System.Windows.Forms.TextBox();
+            this.txtX = new System.Windows.Forms.TextBox();
+            this.txtY = new System.Windows.Forms.TextBox();
+            this.btnFilterValue = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnLoadImage
             // 
-            this.btnLoadImage.Location = new System.Drawing.Point(817, 50);
+            this.btnLoadImage.Location = new System.Drawing.Point(865, 50);
             this.btnLoadImage.Name = "btnLoadImage";
             this.btnLoadImage.Size = new System.Drawing.Size(129, 47);
             this.btnLoadImage.TabIndex = 0;
@@ -47,7 +51,7 @@
             // 
             // txtBubblesheetLocation
             // 
-            this.txtBubblesheetLocation.Location = new System.Drawing.Point(746, 12);
+            this.txtBubblesheetLocation.Location = new System.Drawing.Point(794, 12);
             this.txtBubblesheetLocation.Multiline = true;
             this.txtBubblesheetLocation.Name = "txtBubblesheetLocation";
             this.txtBubblesheetLocation.Size = new System.Drawing.Size(200, 32);
@@ -56,7 +60,7 @@
             // 
             // btnLoadFilter
             // 
-            this.btnLoadFilter.Location = new System.Drawing.Point(817, 141);
+            this.btnLoadFilter.Location = new System.Drawing.Point(865, 141);
             this.btnLoadFilter.Name = "btnLoadFilter";
             this.btnLoadFilter.Size = new System.Drawing.Size(129, 51);
             this.btnLoadFilter.TabIndex = 2;
@@ -66,7 +70,7 @@
             // 
             // txtFilterLocation
             // 
-            this.txtFilterLocation.Location = new System.Drawing.Point(746, 103);
+            this.txtFilterLocation.Location = new System.Drawing.Point(794, 103);
             this.txtFilterLocation.Multiline = true;
             this.txtFilterLocation.Name = "txtFilterLocation";
             this.txtFilterLocation.Size = new System.Drawing.Size(200, 32);
@@ -75,7 +79,7 @@
             // 
             // btnRunFilter
             // 
-            this.btnRunFilter.Location = new System.Drawing.Point(817, 198);
+            this.btnRunFilter.Location = new System.Drawing.Point(865, 198);
             this.btnRunFilter.Name = "btnRunFilter";
             this.btnRunFilter.Size = new System.Drawing.Size(129, 51);
             this.btnRunFilter.TabIndex = 4;
@@ -83,11 +87,46 @@
             this.btnRunFilter.UseVisualStyleBackColor = true;
             this.btnRunFilter.Click += new System.EventHandler(this.btnRunFilter_Click);
             // 
+            // txtScale
+            // 
+            this.txtScale.Location = new System.Drawing.Point(794, 255);
+            this.txtScale.Name = "txtScale";
+            this.txtScale.Size = new System.Drawing.Size(67, 20);
+            this.txtScale.TabIndex = 5;
+            // 
+            // txtX
+            // 
+            this.txtX.Location = new System.Drawing.Point(867, 255);
+            this.txtX.Name = "txtX";
+            this.txtX.Size = new System.Drawing.Size(59, 20);
+            this.txtX.TabIndex = 6;
+            // 
+            // txtY
+            // 
+            this.txtY.Location = new System.Drawing.Point(932, 255);
+            this.txtY.Name = "txtY";
+            this.txtY.Size = new System.Drawing.Size(62, 20);
+            this.txtY.TabIndex = 7;
+            // 
+            // btnFilterValue
+            // 
+            this.btnFilterValue.Location = new System.Drawing.Point(865, 281);
+            this.btnFilterValue.Name = "btnFilterValue";
+            this.btnFilterValue.Size = new System.Drawing.Size(129, 61);
+            this.btnFilterValue.TabIndex = 8;
+            this.btnFilterValue.Text = "Get Value";
+            this.btnFilterValue.UseVisualStyleBackColor = true;
+            this.btnFilterValue.Click += new System.EventHandler(this.btnFilterValue_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(958, 490);
+            this.ClientSize = new System.Drawing.Size(1006, 667);
+            this.Controls.Add(this.btnFilterValue);
+            this.Controls.Add(this.txtY);
+            this.Controls.Add(this.txtX);
+            this.Controls.Add(this.txtScale);
             this.Controls.Add(this.btnRunFilter);
             this.Controls.Add(this.txtFilterLocation);
             this.Controls.Add(this.btnLoadFilter);
@@ -107,6 +146,10 @@
         private System.Windows.Forms.Button btnLoadFilter;
         private System.Windows.Forms.TextBox txtFilterLocation;
         private System.Windows.Forms.Button btnRunFilter;
+        private System.Windows.Forms.TextBox txtScale;
+        private System.Windows.Forms.TextBox txtX;
+        private System.Windows.Forms.TextBox txtY;
+        private System.Windows.Forms.Button btnFilterValue;
     }
 }
 

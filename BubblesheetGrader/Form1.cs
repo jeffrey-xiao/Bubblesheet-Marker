@@ -23,6 +23,13 @@ namespace BubblesheetGrader
         private bool _fileLoaded = false;
         private bool _filterLoaded = false;
 
+        private float[,] _blurFilter = new float[,]
+        {
+            {1,2,1 },
+            {2,4,2 },
+            {1,2,1 }
+        };
+
         private List<Point> _questionBoxes = new List<Point>();
 
         public Form1()
@@ -48,13 +55,91 @@ namespace BubblesheetGrader
             {
                 for (int j = 0; j < _imgHeight; ++j)
                 {
-                    _image[i, j] = _bubbleSheet.GetPixel(i, j).GetBrightness();
+                    _image[i, j] = _bubbleSheet.GetPixel(i, j).GetBrightness()*2-1;
                 }
             }
 
             //resize to image less than 2megapixels
             _image = ImageProcessor.ResizeImage(_image);
             _imgWidth = _image.GetLength(0); _imgHeight = _image.GetLength(1);
+            float[,] blurred = new float[_imgWidth-2, _imgHeight-2];
+
+            for (int i = 0; i < _imgWidth-2; ++i)
+            {
+                for (int j = 0; j < _imgHeight-2; ++j)
+                {
+                    for (int p = 0; p < 3; ++p)
+                    {
+                        for (int q = 0; q < 3; ++q)
+                        {
+                            blurred[i, j] += _image[i + p, j + q] * _blurFilter[p, q];
+                        }
+                    }
+                    blurred[i, j] /= 16;
+                }
+            }
+
+            _imgWidth -= 2; _imgHeight -= 2;
+            _image = blurred;
+            float[,] presum = new float[_imgWidth, _imgHeight];
+
+            for (int i = 0; i < _imgWidth; ++i)
+            {
+                for (int j = 0; j < _imgHeight; ++j)
+                {
+                    presum[i, j] = _image[i, j];
+                    if (i > 0)
+                        presum[i, j] += presum[i - 1, j];
+                    if (j > 0)
+                        presum[i, j] += presum[i, j - 1];
+                    if (i > 0 && j > 0)
+                        presum[i, j] -= presum[i - 1, j - 1];
+                }
+            }
+            int rWidth = _imgWidth / 16, rHeight = _imgHeight / 16;
+
+            float[,] newImage = new float[_imgWidth, _imgHeight];
+
+            for (int i = 0; i < _imgWidth; ++i)
+            {
+                for (int j = 0; j < _imgHeight; ++j)
+                {
+                    //float total = presum[Math.Min(i + rWidth - 1, _imgWidth - 1), Math.Min(j + rHeight - 1, _imgHeight - 1)];
+                    //if (i - rWidth >= 0)
+                    //    total -= presum[i - rWidth, Math.Min(j + rHeight - 1, _imgHeight - 1)];
+                    //if (j - rHeight >= 0)
+                    //    total -= presum[Math.Min(i + rWidth - 1, _imgWidth - 1), j - rHeight];
+                    //if (i - rWidth >= 0 && j - rHeight >= 0)
+                    //    total += presum[i - rWidth, j - rHeight];
+
+                    //float cnt = (Math.Min(i + rWidth - 1, _imgWidth) - Math.Max(-1, i - rWidth)) *
+                    //          (Math.Min(j + rHeight - 1, _imgHeight) - Math.Max(-1, i - rHeight));
+
+                    float total = 0, cnt = 0;
+                    for (int p = Math.Max(0, i-rWidth+1); p < Math.Min(_imgWidth, i+rWidth); ++p)
+                    {
+                        for (int q = Math.Max(0, j-rHeight+1); q < Math.Min(_imgHeight, j+rHeight); ++q)
+                        {
+                            total += _image[p, q]; ++cnt;
+                        }
+                    }
+
+                    float avg = total / cnt;
+                    if (_image[i, j] > avg) newImage[i, j] = 1;
+                    else newImage[i, j] = -1;
+                }
+            }
+
+            _image = newImage;
+
+            //for (int i = 0; i < _imgWidth; ++i)
+            //{
+            //    for (int j = 0; j < _imgHeight; ++j)
+            //    {
+            //        _image[i, j] = Contrast(_image[i, j] * 2 - 1);
+            //        if (_image[i, j] > 0.4F) _image[i, j] = 1;
+            //    }
+            //}
 
             _fileLoaded = true;
         }
@@ -87,9 +172,15 @@ namespace BubblesheetGrader
         private float _bestValue = -99999;
         bool filterDone = false;
 
+        float Contrast(float x)
+        {
+            return (float)Math.Sin(x * Math.PI / 2);
+        }
+
         private void btnRunFilter_Click(object sender, EventArgs e)
         {
-            for (float f = 0.5F; f > 0.05F; f -= 0.025F)
+            drawBest = true;
+            for (float f = 1F; f > 0.12F; f *= 0.92F)
             {
                 float[,] filter = ResizeFilter(f);
                 int width = filter.GetLength(0), height = filter.GetLength(1);
@@ -105,16 +196,18 @@ namespace BubblesheetGrader
                         }
                     }
                 }
-                //Refresh();
+                Refresh();
                 this.Text = f.ToString();
             }
             FindQuestionboxes();
         }
 
+        bool drawBest = false;
+
         private void FindQuestionboxes()
         {
             float[,] filter = ResizeFilter(_bestSize);
-            float cutoff = _bestValue * 0.99F;
+            float cutoff = _bestValue * 0.999F;
             int nextI = 0;
             for (int i = 0; i < _imgWidth-filter.GetLength(0); i=nextI)
             {
@@ -135,6 +228,20 @@ namespace BubblesheetGrader
             Refresh();
         }
 
+        private void btnFilterValue_Click(object sender, EventArgs e)
+        {
+            float f = float.Parse(txtScale.Text);
+            int x = int.Parse(txtX.Text);
+            int y = int.Parse(txtY.Text);
+            _bestSize = f;
+            bestX = x;
+            bestY = y;
+            float[,] filter = ResizeFilter(f);
+            this.Text = GetFilterValue(filter, x, y).ToString();
+            drawBest = true;
+            Refresh();
+        }
+
         private float GetFilterValue(float[,] filter, int x, int y)
         {
             float value = 0;
@@ -145,7 +252,7 @@ namespace BubblesheetGrader
                     value += _image[x + i, y + j] * filter[i, j];
                 }
             }
-            return value * 1000 / filter.GetLength(0) / filter.GetLength(1);
+            return value * 1000 / filter.GetLength(0) / filter.GetLength(1)+500;
         }
 
         private float[,] ResizeFilter(float factor)
@@ -192,7 +299,8 @@ namespace BubblesheetGrader
                 {
                     if (weightSum[i, j] > 0)
                         resized[i, j] /= weightSum[i, j];
-                    else resized[i, j] = 1;
+                    else resized[i, j] = 0;
+                    
                 }
             }
             return resized;
@@ -203,12 +311,13 @@ namespace BubblesheetGrader
             base.OnPaint(e);
             if (_fileLoaded)
             {
-                for (int i = 0; i < _imgWidth; i+=1)
+                //e.Graphics.DrawImage(_bubbleSheet, 0, 0);
+                for (int i = 0; i < _imgWidth; i ++)
                 {
-                    for (int j = 0; j < _imgHeight; j += 1)
+                    for (int j = 0; j < _imgHeight; j ++)
                     {
-                        Pen p = new Pen(Color.FromArgb((int)(_image[i, j] * 255), (int)(_image[i, j] * 255), (int)(_image[i, j] * 255)));
-                        e.Graphics.DrawRectangle(p, i, j, 1, 1);
+                        Brush p = new SolidBrush(Color.FromArgb((int)((_image[i, j]+1) * 127), (int)((_image[i, j] + 1) * 127), (int)((_image[i, j] + 1) * 127)));
+                        e.Graphics.FillRectangle(p, i, j, 1, 1);
                     }
                 }
             }
@@ -218,6 +327,10 @@ namespace BubblesheetGrader
                 {
                     e.Graphics.DrawRectangle(Pens.Red, _questionBoxes[i].X, _questionBoxes[i].Y, _bestSize * _filterWidth, _bestSize * _filterHeight);
                 }
+            }
+            if (drawBest)
+            {
+                e.Graphics.DrawRectangle(Pens.Red, bestX, bestY, _bestSize * _filterWidth, _bestSize * _filterHeight);
             }
             //if (_filterLoaded)
             //{
