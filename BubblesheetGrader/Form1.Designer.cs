@@ -30,8 +30,9 @@
         {
             this.btnLoadImage = new System.Windows.Forms.Button();
             this.txtBubblesheetLocation = new System.Windows.Forms.TextBox();
-            this.btnRunFilter = new System.Windows.Forms.Button();
+            this.btnLoadFilter = new System.Windows.Forms.Button();
             this.txtFilterLocation = new System.Windows.Forms.TextBox();
+            this.btnRunFilter = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnLoadImage
@@ -53,14 +54,15 @@
             this.txtBubblesheetLocation.TabIndex = 1;
             this.txtBubblesheetLocation.Text = "C:\\Users\\Josh\\Desktop\\Projects\\BubblesheetGrader\\Bubblesheet.jpg";
             // 
-            // btnRunFilter
+            // btnLoadFilter
             // 
-            this.btnRunFilter.Location = new System.Drawing.Point(817, 141);
-            this.btnRunFilter.Name = "btnRunFilter";
-            this.btnRunFilter.Size = new System.Drawing.Size(129, 51);
-            this.btnRunFilter.TabIndex = 2;
-            this.btnRunFilter.Text = "Run Filter";
-            this.btnRunFilter.UseVisualStyleBackColor = true;
+            this.btnLoadFilter.Location = new System.Drawing.Point(817, 141);
+            this.btnLoadFilter.Name = "btnLoadFilter";
+            this.btnLoadFilter.Size = new System.Drawing.Size(129, 51);
+            this.btnLoadFilter.TabIndex = 2;
+            this.btnLoadFilter.Text = "Load Filter";
+            this.btnLoadFilter.UseVisualStyleBackColor = true;
+            this.btnLoadFilter.Click += new System.EventHandler(this.btnLoadFilter_Click);
             // 
             // txtFilterLocation
             // 
@@ -71,13 +73,24 @@
             this.txtFilterLocation.TabIndex = 3;
             this.txtFilterLocation.Text = "C:\\Users\\Josh\\Desktop\\Projects\\BubblesheetGrader\\filter.txt";
             // 
+            // btnRunFilter
+            // 
+            this.btnRunFilter.Location = new System.Drawing.Point(817, 198);
+            this.btnRunFilter.Name = "btnRunFilter";
+            this.btnRunFilter.Size = new System.Drawing.Size(129, 51);
+            this.btnRunFilter.TabIndex = 4;
+            this.btnRunFilter.Text = "Run Filter";
+            this.btnRunFilter.UseVisualStyleBackColor = true;
+            this.btnRunFilter.Click += new System.EventHandler(this.btnRunFilter_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(958, 490);
-            this.Controls.Add(this.txtFilterLocation);
             this.Controls.Add(this.btnRunFilter);
+            this.Controls.Add(this.txtFilterLocation);
+            this.Controls.Add(this.btnLoadFilter);
             this.Controls.Add(this.txtBubblesheetLocation);
             this.Controls.Add(this.btnLoadImage);
             this.Name = "Form1";
@@ -91,8 +104,9 @@
 
         private System.Windows.Forms.Button btnLoadImage;
         private System.Windows.Forms.TextBox txtBubblesheetLocation;
-        private System.Windows.Forms.Button btnRunFilter;
+        private System.Windows.Forms.Button btnLoadFilter;
         private System.Windows.Forms.TextBox txtFilterLocation;
+        private System.Windows.Forms.Button btnRunFilter;
     }
 }
 
