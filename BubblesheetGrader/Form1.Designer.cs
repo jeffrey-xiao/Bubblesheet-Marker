@@ -33,10 +33,8 @@
             this.btnLoadFilter = new System.Windows.Forms.Button();
             this.txtFilterLocation = new System.Windows.Forms.TextBox();
             this.btnRunFilter = new System.Windows.Forms.Button();
-            this.txtScale = new System.Windows.Forms.TextBox();
-            this.txtX = new System.Windows.Forms.TextBox();
-            this.txtY = new System.Windows.Forms.TextBox();
-            this.btnFilterValue = new System.Windows.Forms.Button();
+            this.btnRun = new System.Windows.Forms.Button();
+            this.txtAnswers = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // btnLoadImage
@@ -75,11 +73,11 @@
             this.txtFilterLocation.Name = "txtFilterLocation";
             this.txtFilterLocation.Size = new System.Drawing.Size(200, 32);
             this.txtFilterLocation.TabIndex = 3;
-            this.txtFilterLocation.Text = "C:\\Users\\Josh\\Desktop\\Projects\\BubblesheetGrader\\filter.txt";
+            this.txtFilterLocation.Text = "C:\\Users\\Josh\\Desktop\\Projects\\BubblesheetGrader\\filter10.txt";
             // 
             // btnRunFilter
             // 
-            this.btnRunFilter.Location = new System.Drawing.Point(865, 198);
+            this.btnRunFilter.Location = new System.Drawing.Point(865, 305);
             this.btnRunFilter.Name = "btnRunFilter";
             this.btnRunFilter.Size = new System.Drawing.Size(129, 51);
             this.btnRunFilter.TabIndex = 4;
@@ -87,46 +85,32 @@
             this.btnRunFilter.UseVisualStyleBackColor = true;
             this.btnRunFilter.Click += new System.EventHandler(this.btnRunFilter_Click);
             // 
-            // txtScale
+            // btnRun
             // 
-            this.txtScale.Location = new System.Drawing.Point(794, 255);
-            this.txtScale.Name = "txtScale";
-            this.txtScale.Size = new System.Drawing.Size(67, 20);
-            this.txtScale.TabIndex = 5;
+            this.btnRun.Location = new System.Drawing.Point(645, 305);
+            this.btnRun.Name = "btnRun";
+            this.btnRun.Size = new System.Drawing.Size(129, 47);
+            this.btnRun.TabIndex = 9;
+            this.btnRun.Text = "Run";
+            this.btnRun.UseVisualStyleBackColor = true;
+            this.btnRun.Click += new System.EventHandler(this.btnRun_Click);
             // 
-            // txtX
+            // txtAnswers
             // 
-            this.txtX.Location = new System.Drawing.Point(867, 255);
-            this.txtX.Name = "txtX";
-            this.txtX.Size = new System.Drawing.Size(59, 20);
-            this.txtX.TabIndex = 6;
-            // 
-            // txtY
-            // 
-            this.txtY.Location = new System.Drawing.Point(932, 255);
-            this.txtY.Name = "txtY";
-            this.txtY.Size = new System.Drawing.Size(62, 20);
-            this.txtY.TabIndex = 7;
-            // 
-            // btnFilterValue
-            // 
-            this.btnFilterValue.Location = new System.Drawing.Point(865, 281);
-            this.btnFilterValue.Name = "btnFilterValue";
-            this.btnFilterValue.Size = new System.Drawing.Size(129, 61);
-            this.btnFilterValue.TabIndex = 8;
-            this.btnFilterValue.Text = "Get Value";
-            this.btnFilterValue.UseVisualStyleBackColor = true;
-            this.btnFilterValue.Click += new System.EventHandler(this.btnFilterValue_Click);
+            this.txtAnswers.Location = new System.Drawing.Point(794, 198);
+            this.txtAnswers.Multiline = true;
+            this.txtAnswers.Name = "txtAnswers";
+            this.txtAnswers.Size = new System.Drawing.Size(200, 32);
+            this.txtAnswers.TabIndex = 10;
+            this.txtAnswers.Text = "C:\\Users\\Josh\\Desktop\\Projects\\BubblesheetGrader\\answers.txt";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1006, 667);
-            this.Controls.Add(this.btnFilterValue);
-            this.Controls.Add(this.txtY);
-            this.Controls.Add(this.txtX);
-            this.Controls.Add(this.txtScale);
+            this.Controls.Add(this.txtAnswers);
+            this.Controls.Add(this.btnRun);
             this.Controls.Add(this.btnRunFilter);
             this.Controls.Add(this.txtFilterLocation);
             this.Controls.Add(this.btnLoadFilter);
@@ -146,10 +130,8 @@
         private System.Windows.Forms.Button btnLoadFilter;
         private System.Windows.Forms.TextBox txtFilterLocation;
         private System.Windows.Forms.Button btnRunFilter;
-        private System.Windows.Forms.TextBox txtScale;
-        private System.Windows.Forms.TextBox txtX;
-        private System.Windows.Forms.TextBox txtY;
-        private System.Windows.Forms.Button btnFilterValue;
+        private System.Windows.Forms.Button btnRun;
+        private System.Windows.Forms.TextBox txtAnswers;
     }
 }
 
