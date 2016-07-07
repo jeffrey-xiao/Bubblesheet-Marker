@@ -31,6 +31,7 @@ namespace BubblesheetGrader
         };
 
         private List<Point> _questionBoxes = new List<Point>();
+        private List<float> _boxValues = new List<float>();
 
         public Form1()
         {
@@ -125,7 +126,7 @@ namespace BubblesheetGrader
                     }
 
                     float avg = total / cnt;
-                    newImage[i, j] = (float)Math.Tanh(_image[i, j] - avg);
+                    newImage[i, j] = (float)Math.Tanh((_image[i, j] - avg+0.1)*100);
                 }
             }
 
@@ -196,7 +197,7 @@ namespace BubblesheetGrader
                         }
                     }
                 }
-                Refresh();
+                //Refresh();
                 this.Text = f.ToString();
             }
             FindQuestionboxes();
@@ -207,19 +208,38 @@ namespace BubblesheetGrader
         private void FindQuestionboxes()
         {
             float[,] filter = ResizeFilter(_bestSize);
-            float cutoff = _bestValue * 0.999F;
-            int nextI = 0;
-            for (int i = 0; i < _imgWidth-filter.GetLength(0); i=nextI)
+            float cutoff = _bestValue * 0.91F;
+            int nextI = _imgWidth-filter.GetLength(0)-1;
+            for (int i = _imgWidth-filter.GetLength(0)-1; i>=0; i=nextI)
             {
-                nextI = i + 1;
+                nextI = i - 1;
                 for (int j = 0; j < _imgHeight-filter.GetLength(1); ++j)
                 {
                     float val = GetFilterValue(filter, i, j);
                     if (val>cutoff)
                     {
-                        _questionBoxes.Add(new Point(i, j));
-                        j += filter.GetLength(1);
-                        nextI = i + filter.GetLength(0);
+                        bool b = true;
+                        for (int k = 0; k < _questionBoxes.Count; ++k)
+                        {
+                            bool xIntersect = Math.Max(_questionBoxes[k].X, i) < Math.Min(_questionBoxes[k].X + filter.GetLength(0), i + filter.GetLength(0));
+                            bool yIntersect = Math.Max(_questionBoxes[k].Y, j) < Math.Min(_questionBoxes[k].Y + filter.GetLength(1), j + filter.GetLength(1));
+                            if (xIntersect&&yIntersect)
+                            {
+                                if (val>_boxValues[k])
+                                {
+                                    _questionBoxes[k] = new Point(i, j);
+                                    _boxValues[k] = val;
+                                }
+                                b = false; break;
+                            }
+                        }
+                        if (b)
+                        {
+                            _boxValues.Add(val);
+                            _questionBoxes.Add(new Point(i, j));
+                        }
+                        //j += filter.GetLength(1);
+                        //nextI = i - filter.GetLength(0);
                         this.Text = "Found " + _questionBoxes.Count + " questionboxes";
                     }
                 }
@@ -333,19 +353,19 @@ namespace BubblesheetGrader
             {
                 e.Graphics.DrawRectangle(Pens.Red, bestX, bestY, _bestSize * _filterWidth, _bestSize * _filterHeight);
             }
-            if (_filterLoaded)
-            {
-                _fileLoaded = false;
-                float[,] filter = ResizeFilter(_bestSize);
-                for (int i = 0; i < filter.GetLength(0); ++i)
-                {
-                    for (int j = 0; j < filter.GetLength(1); ++j)
-                    {
-                        Pen p = new Pen(Color.FromArgb((int)((filter[i, j] + 1) * 127), (int)((filter[i, j] + 1) * 127), (int)((filter[i, j] + 1) * 127)));
-                        e.Graphics.DrawRectangle(p, bestX+ _bestSize * _filterWidth+i * 1, bestY+j * 1, 1, 1);
-                    }
-                }
-            }
+            //if (_filterLoaded)
+            //{
+            //    _fileLoaded = false;
+            //    float[,] filter = ResizeFilter(_bestSize);
+            //    for (int i = 0; i < filter.GetLength(0); ++i)
+            //    {
+            //        for (int j = 0; j < filter.GetLength(1); ++j)
+            //        {
+            //            Pen p = new Pen(Color.FromArgb((int)((filter[i, j] + 1) * 127), (int)((filter[i, j] + 1) * 127), (int)((filter[i, j] + 1) * 127)));
+            //            e.Graphics.DrawRectangle(p, bestX+ _bestSize * _filterWidth+i * 1, bestY+j * 1, 1, 1);
+            //        }
+            //    }
+            //}
         }
     }
 }
