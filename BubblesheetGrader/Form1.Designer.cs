@@ -28,94 +28,103 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btnLoadImage = new System.Windows.Forms.Button();
             this.txtBubblesheetLocation = new System.Windows.Forms.TextBox();
-            this.btnLoadFilter = new System.Windows.Forms.Button();
             this.txtFilterLocation = new System.Windows.Forms.TextBox();
-            this.btnRunFilter = new System.Windows.Forms.Button();
-            this.btnRun = new System.Windows.Forms.Button();
+            this.btnRunAndMark = new System.Windows.Forms.Button();
             this.txtAnswers = new System.Windows.Forms.TextBox();
+            this.btnRunAndSave = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             this.SuspendLayout();
-            // 
-            // btnLoadImage
-            // 
-            this.btnLoadImage.Location = new System.Drawing.Point(865, 50);
-            this.btnLoadImage.Name = "btnLoadImage";
-            this.btnLoadImage.Size = new System.Drawing.Size(129, 47);
-            this.btnLoadImage.TabIndex = 0;
-            this.btnLoadImage.Text = "Load Image";
-            this.btnLoadImage.UseVisualStyleBackColor = true;
-            this.btnLoadImage.Click += new System.EventHandler(this.btnLoadImage_Click);
             // 
             // txtBubblesheetLocation
             // 
-            this.txtBubblesheetLocation.Location = new System.Drawing.Point(794, 12);
+            this.txtBubblesheetLocation.Location = new System.Drawing.Point(794, 25);
             this.txtBubblesheetLocation.Multiline = true;
             this.txtBubblesheetLocation.Name = "txtBubblesheetLocation";
             this.txtBubblesheetLocation.Size = new System.Drawing.Size(200, 32);
             this.txtBubblesheetLocation.TabIndex = 1;
             this.txtBubblesheetLocation.Text = "C:\\Users\\Josh\\Desktop\\Projects\\BubblesheetGrader\\scantron.png";
             // 
-            // btnLoadFilter
-            // 
-            this.btnLoadFilter.Location = new System.Drawing.Point(865, 141);
-            this.btnLoadFilter.Name = "btnLoadFilter";
-            this.btnLoadFilter.Size = new System.Drawing.Size(129, 51);
-            this.btnLoadFilter.TabIndex = 2;
-            this.btnLoadFilter.Text = "Load Filter";
-            this.btnLoadFilter.UseVisualStyleBackColor = true;
-            this.btnLoadFilter.Click += new System.EventHandler(this.btnLoadFilter_Click);
-            // 
             // txtFilterLocation
             // 
-            this.txtFilterLocation.Location = new System.Drawing.Point(794, 103);
+            this.txtFilterLocation.Location = new System.Drawing.Point(794, 76);
             this.txtFilterLocation.Multiline = true;
             this.txtFilterLocation.Name = "txtFilterLocation";
             this.txtFilterLocation.Size = new System.Drawing.Size(200, 32);
             this.txtFilterLocation.TabIndex = 3;
             this.txtFilterLocation.Text = "C:\\Users\\Josh\\Desktop\\Projects\\BubblesheetGrader\\filter10.txt";
             // 
-            // btnRunFilter
+            // btnRunAndMark
             // 
-            this.btnRunFilter.Location = new System.Drawing.Point(865, 305);
-            this.btnRunFilter.Name = "btnRunFilter";
-            this.btnRunFilter.Size = new System.Drawing.Size(129, 51);
-            this.btnRunFilter.TabIndex = 4;
-            this.btnRunFilter.Text = "Run Filter";
-            this.btnRunFilter.UseVisualStyleBackColor = true;
-            this.btnRunFilter.Click += new System.EventHandler(this.btnRunFilter_Click);
-            // 
-            // btnRun
-            // 
-            this.btnRun.Location = new System.Drawing.Point(645, 305);
-            this.btnRun.Name = "btnRun";
-            this.btnRun.Size = new System.Drawing.Size(129, 47);
-            this.btnRun.TabIndex = 9;
-            this.btnRun.Text = "Run";
-            this.btnRun.UseVisualStyleBackColor = true;
-            this.btnRun.Click += new System.EventHandler(this.btnRun_Click);
+            this.btnRunAndMark.Location = new System.Drawing.Point(794, 165);
+            this.btnRunAndMark.Name = "btnRunAndMark";
+            this.btnRunAndMark.Size = new System.Drawing.Size(97, 47);
+            this.btnRunAndMark.TabIndex = 9;
+            this.btnRunAndMark.Text = "Run and Mark";
+            this.btnRunAndMark.UseVisualStyleBackColor = true;
+            this.btnRunAndMark.Click += new System.EventHandler(this.btnRunAndMark_Click);
             // 
             // txtAnswers
             // 
-            this.txtAnswers.Location = new System.Drawing.Point(794, 198);
+            this.txtAnswers.Location = new System.Drawing.Point(794, 127);
             this.txtAnswers.Multiline = true;
             this.txtAnswers.Name = "txtAnswers";
             this.txtAnswers.Size = new System.Drawing.Size(200, 32);
             this.txtAnswers.TabIndex = 10;
             this.txtAnswers.Text = "C:\\Users\\Josh\\Desktop\\Projects\\BubblesheetGrader\\answers.txt";
             // 
+            // btnRunAndSave
+            // 
+            this.btnRunAndSave.Location = new System.Drawing.Point(897, 165);
+            this.btnRunAndSave.Name = "btnRunAndSave";
+            this.btnRunAndSave.Size = new System.Drawing.Size(97, 47);
+            this.btnRunAndSave.TabIndex = 11;
+            this.btnRunAndSave.Text = "Run as AnswerKey";
+            this.btnRunAndSave.UseVisualStyleBackColor = true;
+            this.btnRunAndSave.Click += new System.EventHandler(this.btnRunAndSave_Click);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(791, 9);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(98, 13);
+            this.label1.TabIndex = 12;
+            this.label1.Text = "Bubblesheet Image";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(791, 60);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(29, 13);
+            this.label2.TabIndex = 13;
+            this.label2.Text = "Filter";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(791, 111);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(126, 13);
+            this.label3.TabIndex = 14;
+            this.label3.Text = "Answer Key (Load/Save)";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1006, 667);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.btnRunAndSave);
             this.Controls.Add(this.txtAnswers);
-            this.Controls.Add(this.btnRun);
-            this.Controls.Add(this.btnRunFilter);
+            this.Controls.Add(this.btnRunAndMark);
             this.Controls.Add(this.txtFilterLocation);
-            this.Controls.Add(this.btnLoadFilter);
             this.Controls.Add(this.txtBubblesheetLocation);
-            this.Controls.Add(this.btnLoadImage);
             this.Name = "Form1";
             this.Text = "Form1";
             this.ResumeLayout(false);
@@ -124,14 +133,14 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.Button btnLoadImage;
         private System.Windows.Forms.TextBox txtBubblesheetLocation;
-        private System.Windows.Forms.Button btnLoadFilter;
         private System.Windows.Forms.TextBox txtFilterLocation;
-        private System.Windows.Forms.Button btnRunFilter;
-        private System.Windows.Forms.Button btnRun;
+        private System.Windows.Forms.Button btnRunAndMark;
         private System.Windows.Forms.TextBox txtAnswers;
+        private System.Windows.Forms.Button btnRunAndSave;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
     }
 }
 

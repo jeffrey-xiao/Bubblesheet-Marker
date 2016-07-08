@@ -23,8 +23,6 @@ namespace BubblesheetGrader
         private bool _fileLoaded = false;
         private bool _filterLoaded = false;
 
-        private Question[] _questions;
-
         private float[,] _blurFilter = new float[,]
         {
             {1,2,1 },
@@ -35,6 +33,7 @@ namespace BubblesheetGrader
         private List<Point> _questionBoxes = new List<Point>();
         private List<float> _boxValues = new List<float>();
         private char[] _answers;
+        private Question[] _questions;
 
         public static float BestSize = 0;
         int bestX = 0, bestY = 0;
@@ -49,7 +48,7 @@ namespace BubblesheetGrader
             InitializeComponent();
         }
 
-        private void btnLoadImage_Click(object sender, EventArgs e)
+        private void LoadImage()
         {
             _questionBoxes.Clear();
             _boxValues.Clear();
@@ -168,7 +167,7 @@ namespace BubblesheetGrader
             this.Text = "Image Loaded";
         }
 
-        private void btnLoadFilter_Click(object sender, EventArgs e)
+        private void LoadFilter()
         {
             string fileLocation = txtFilterLocation.Text;
 
@@ -197,7 +196,7 @@ namespace BubblesheetGrader
             return (float)Math.Sin(x * Math.PI / 2);
         }
 
-        private void btnRunFilter_Click(object sender, EventArgs e)
+        private void RunFilter()
         {
             drawBest = true;
             for (float f = 0.3F; f > 0.05F; f *= 0.9F)
@@ -221,7 +220,6 @@ namespace BubblesheetGrader
             }
             FindQuestionboxes();
         }
-
 
         private void FindQuestionboxes()
         {
@@ -319,14 +317,19 @@ namespace BubblesheetGrader
 
         List<char> answers;
 
-        private void btnRun_Click(object sender, EventArgs e)
+        private void Run()
         {
-            btnLoadImage_Click(this, e);
-            btnLoadFilter_Click(this, e);
-            btnRunFilter_Click(this, e);
-            LoadAnswers();
+            LoadImage();
+            LoadFilter();
+            RunFilter();
 
             Array.Sort(_questions);
+        }
+
+        private void btnRunAndMark_Click(object sender, EventArgs e)
+        {
+            LoadAnswers();
+            Run();
             int corr=0, total=0;
 
             for (int i = 0; i < _questions.Length; ++i)
@@ -335,7 +338,7 @@ namespace BubblesheetGrader
                 if (_questions[i].Answer == answers[i])
                     ++corr;
             }
-            this.Text = corr + " out of " + total + " answers correct. " + (int)((0.5 + corr) * 100 / total) + "%";
+            this.Text = corr + " out of " + total + " answers correct. " + Math.Round((float)(corr * 100 / total)) + "%";
 
             Refresh();
         }
@@ -352,6 +355,28 @@ namespace BubblesheetGrader
                     answers.Add(char.Parse(s));
                 }
             }
+        }
+
+        private void SaveAnswers()
+        {
+            using (StreamWriter writer = new StreamWriter(txtAnswers.Text))
+            {
+                for (int i = 0; i < _questions.Length; i++)
+                {
+                    writer.WriteLine(_questions[i].Answer);
+                }
+                for (int i = _questions.Length; i < 100; i++)
+                {
+                    writer.WriteLine('N');
+                }
+            }
+        }
+
+        private void btnRunAndSave_Click(object sender, EventArgs e)
+        {
+            Run();
+            SaveAnswers();
+            Refresh();
         }
 
         private float GetFilterValue(float[,] filter, int x, int y)
@@ -438,17 +463,29 @@ namespace BubblesheetGrader
             {
                 for (int i = 0; i < _questionBoxes.Count; ++i)
                 {
-                    e.Graphics.DrawRectangle(Pens.Red, _questionBoxes[i].X, _questionBoxes[i].Y, BestSize * FilterWidth, BestSize * FilterHeight);
-                    if (answersFound)
-                        e.Graphics.DrawString(_answers[i].ToString(), new Font("Courier", 8), Brushes.Red, _questionBoxes[i].X + BestSize * FilterWidth + 1, _questionBoxes[i].Y);
+                    if (answers != null && answers[i] == _questions[i].Answer)
+                    {
+                        Brush b = new SolidBrush(Color.FromArgb(100, 0, 255, 0));
+                        e.Graphics.FillRectangle(b, _questions[i].Location.X, _questions[i].Location.Y, BestSize * FilterWidth, BestSize * FilterHeight);
+                    }
+                    else
+                    {
+                        Brush b = new SolidBrush(Color.FromArgb(100, 255, 0, 0));
+                        if (answersFound)
+                            e.Graphics.DrawString(answers[i].ToString(), new Font("Courier", 8, FontStyle.Bold), Brushes.Green, _questions[i].Location.X + BestSize * FilterWidth + 1, _questions[i].Location.Y);
+                        e.Graphics.FillRectangle(b, _questions[i].Location.X, _questions[i].Location.Y, BestSize * FilterWidth, BestSize * FilterHeight);
+                        if (_questions[i].Location.X == 215 && _questions[i].Location.Y == 170)
+                        { bool k = true; }
+                    }
                     e.Graphics.DrawString(_questions[i].Answer.ToString(), new Font("Courier", 10), Brushes.Black, i * 12 + 20, 400);
-                    e.Graphics.DrawString(answers[i].ToString(), new Font("Courier", 10), Brushes.Black, i * 12 + 20, 430);
+                    if (answers != null)
+                        e.Graphics.DrawString(answers[i].ToString(), new Font("Courier", 10), Brushes.Black, i * 12 + 20, 430);
                 }
             }
-            if (drawBest)
-            {
-                e.Graphics.DrawRectangle(Pens.Red, bestX, bestY, BestSize * FilterWidth, BestSize * FilterHeight);
-            }
+            //if (drawBest)
+            //{
+            //    e.Graphics.DrawRectangle(Pens.Red, bestX, bestY, BestSize * FilterWidth, BestSize * FilterHeight);
+            //}
             //if (_filterLoaded)
             //{
             //    _fileLoaded = false;
