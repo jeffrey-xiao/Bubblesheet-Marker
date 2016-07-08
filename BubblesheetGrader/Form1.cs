@@ -50,6 +50,7 @@ namespace BubblesheetGrader
 
         private void LoadImage()
         {
+            this.Text = "Loading Image...";
             _questionBoxes.Clear();
             _boxValues.Clear();
             filterDone = false;
@@ -148,7 +149,7 @@ namespace BubblesheetGrader
                     //}
 
                     float avg = total / cnt;
-                    newImage[i, j] = (float)Math.Tanh((_image[i, j] - avg+0.05)*100);
+                    newImage[i, j] = (float)Math.Tanh((_image[i, j] - avg+0.05)*30);
                 }
             }
 
@@ -338,7 +339,8 @@ namespace BubblesheetGrader
                 if (_questions[i].Answer == answers[i])
                     ++corr;
             }
-            this.Text = corr + " out of " + total + " answers correct. " + Math.Round((float)(corr * 100 / total)) + "%";
+            if (total>0)
+                this.Text = corr + " out of " + total + " answers correct. " + Math.Round((float)(corr * 100 / total)) + "%";
 
             Refresh();
         }
@@ -446,21 +448,24 @@ namespace BubblesheetGrader
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
-            _fileLoaded = true;
             if (_fileLoaded)
             {
-                //e.Graphics.DrawImage(_bubbleSheet, 0, 0);
-                for (int i = 0; i < _imgWidth; i ++)
+                float f = (float)2e5 / _bubbleSheet.Width / _bubbleSheet.Height;
+                f = (float)Math.Sqrt(f);
+                e.Graphics.DrawImage(_bubbleSheet, 0,0, f*_bubbleSheet.Width,f*_bubbleSheet.Height);
+                for (int i = 0; i < _imgWidth; i++)
                 {
-                    for (int j = 0; j < _imgHeight; j ++)
+                    for (int j = 0; j < _imgHeight; j++)
                     {
-                        Brush p = new SolidBrush(Color.FromArgb((int)((_image[i, j]+1) * 127), (int)((_image[i, j] + 1) * 127), (int)((_image[i, j] + 1) * 127)));
-                        e.Graphics.FillRectangle(p, i, j, 1, 1);
+                        Brush p = new SolidBrush(Color.FromArgb((int)((_image[i, j] + 1) * 127), (int)((_image[i, j] + 1) * 127), (int)((_image[i, j] + 1) * 127)));
+                        e.Graphics.FillRectangle(p, i/2+f*_bubbleSheet.Width, j/2, 1, 1);
                     }
                 }
             }
             if (filterDone)
             {
+                e.Graphics.DrawString("Student Answers:", new Font("Courier", 10), Brushes.Black, 10, 430);
+                e.Graphics.DrawString("Correct Answers:", new Font("Courier", 10), Brushes.Black, 10, 460);
                 for (int i = 0; i < _questionBoxes.Count; ++i)
                 {
                     if (answers != null && answers[i] == _questions[i].Answer)
@@ -471,15 +476,14 @@ namespace BubblesheetGrader
                     else
                     {
                         Brush b = new SolidBrush(Color.FromArgb(100, 255, 0, 0));
-                        if (answersFound)
+                        if (answers != null)
                             e.Graphics.DrawString(answers[i].ToString(), new Font("Courier", 8, FontStyle.Bold), Brushes.Green, _questions[i].Location.X + BestSize * FilterWidth + 1, _questions[i].Location.Y);
                         e.Graphics.FillRectangle(b, _questions[i].Location.X, _questions[i].Location.Y, BestSize * FilterWidth, BestSize * FilterHeight);
-                        if (_questions[i].Location.X == 215 && _questions[i].Location.Y == 170)
-                        { bool k = true; }
                     }
-                    e.Graphics.DrawString(_questions[i].Answer.ToString(), new Font("Courier", 10), Brushes.Black, i * 12 + 20, 400);
+                    e.Graphics.DrawString((i+1).ToString(), new Font("Courier", 8), Brushes.Black, i * 15 + 120, 400);
+                    e.Graphics.DrawString(_questions[i].Answer.ToString(), new Font("Courier", 9), Brushes.Black, i * 15 + 120, 430);
                     if (answers != null)
-                        e.Graphics.DrawString(answers[i].ToString(), new Font("Courier", 10), Brushes.Black, i * 12 + 20, 430);
+                        e.Graphics.DrawString(answers[i].ToString(), new Font("Courier", 9), Brushes.Black, i * 15 + 120, 460);
                 }
             }
             //if (drawBest)
