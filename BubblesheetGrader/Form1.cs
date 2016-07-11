@@ -13,7 +13,6 @@ namespace BubblesheetGrader
 {
     public partial class Form1 : Form
     {
-        private const string FILTER_LOCATION = "C:/User/Josh/Desktop/Projects/BubblesheetGrader/filter.txt";
 
         private Bitmap _bubbleSheet;
         private float[,] _image;
@@ -69,29 +68,27 @@ namespace BubblesheetGrader
 
             _bubbleSheet = new Bitmap(fileLocation);
 
+            float f = (float)2e5 / _bubbleSheet.Width / _bubbleSheet.Height;
+            f = (float)Math.Sqrt(f);
+
+            _bubbleSheet = new Bitmap(_bubbleSheet, new Size((int)(f * _bubbleSheet.Width), (int)(f * _bubbleSheet.Height)));
+
             _imgWidth = _bubbleSheet.Width; _imgHeight = _bubbleSheet.Height;
             _image = new float[_imgWidth, _imgHeight];
             for (int i = 0; i < _imgWidth; ++i)
             {
                 for (int j = 0; j < _imgHeight; ++j)
                 {
-                    _image[i, j] = _bubbleSheet.GetPixel(i, j).GetBrightness()*2-1;
+                    Color c = _bubbleSheet.GetPixel(i, j);
+                    _image[i, j] = (float)(0.299 * c.R + 0.587 * c.G + 0.114 * c.B) / 127 - 1;
                 }
             }
 
-            //resize to image less than 2megapixels
-            //_image = ImageProcessor.ResizeImage(_image);
+            float[,] blurred = new float[_imgWidth - 2, _imgHeight - 2];
 
-            float f = (float)2e5 / _image.GetLength(0) / _image.GetLength(1);
-            f = (float)Math.Sqrt(f);
-            _image = ResizeImage(f, _image);
-
-            _imgWidth = _image.GetLength(0); _imgHeight = _image.GetLength(1);
-            float[,] blurred = new float[_imgWidth-2, _imgHeight-2];
-
-            for (int i = 0; i < _imgWidth-2; ++i)
+            for (int i = 0; i < _imgWidth - 2; ++i)
             {
-                for (int j = 0; j < _imgHeight-2; ++j)
+                for (int j = 0; j < _imgHeight - 2; ++j)
                 {
                     for (int p = 0; p < 3; ++p)
                     {
@@ -121,7 +118,7 @@ namespace BubblesheetGrader
                         presum[i, j] -= presum[i - 1, j - 1];
                 }
             }
-            int rWidth = _imgWidth / 16, rHeight = _imgHeight / 16;
+            int rWidth = _imgWidth / 24, rHeight = _imgHeight / 24;
 
             float[,] newImage = new float[_imgWidth, _imgHeight];
 
@@ -149,7 +146,7 @@ namespace BubblesheetGrader
                     //}
 
                     float avg = total / cnt;
-                    newImage[i, j] = (float)Math.Tanh((_image[i, j] - avg+0.05)*30);
+                    newImage[i, j] = (float)Math.Tanh((_image[i, j] - avg+0.05)*40);
                 }
             }
 
@@ -200,19 +197,19 @@ namespace BubblesheetGrader
         private void RunFilter()
         {
             drawBest = true;
-            for (float f = 0.3F; f > 0.05F; f *= 0.9F)
+            for (float f = 0.17F; f > 0.13F; f *= 0.99F)
             {
                 float[,] filter = ResizeImage(f,_filter);
                 int width = filter.GetLength(0), height = filter.GetLength(1);
-                for (int i = 0; i < _imgWidth - width; i += 5)
+                for (int i = 0; i < _imgWidth - width; i += 12)
                 {
-                    for (int j = 0; j < _imgHeight - height; j += 5)
+                    for (int j = 0; j < _imgHeight - height; j += 12)
                     {
                         float val = GetFilterValue(filter, i, j);
                         if (val>_bestValue)
                         {
                             _bestValue = val;
-                            BestSize = f; bestX = i; bestY = j;
+                            BestSize = f;
                         }
                     }
                 }
@@ -225,36 +222,61 @@ namespace BubblesheetGrader
         private void FindQuestionboxes()
         {
             float[,] filter = ResizeImage(BestSize, _filter);
-            float cutoff = 620;// _bestValue * 0.85F;
-            int nextI = _imgWidth-filter.GetLength(0)-1;
-            for (int i = _imgWidth-filter.GetLength(0)-1; i>=0; i--)
+            float[,] blurred = new float[filter.GetLength(0), filter.GetLength(1)];
+            for (int i = 1; i < filter.GetLength(0)-1; i++)
             {
-                for (int j = 0; j < _imgHeight-filter.GetLength(1); j++)
+                for (int j = 1; j < filter.GetLength(1)-1; j++)
                 {
-                    float val = GetFilterValue(filter, i, j);
-                    if (val>cutoff)
+                    for (int p = 0; p < 3; p++)
                     {
-                        bool b = true;
-                        for (int k = 0; k < _questionBoxes.Count; ++k)
+                        for (int q = 0; q < 3; q++)
                         {
-                            bool xIntersect = Math.Max(_questionBoxes[k].X, i) < Math.Min(_questionBoxes[k].X + filter.GetLength(0), i + filter.GetLength(0));
-                            bool yIntersect = Math.Max(_questionBoxes[k].Y, j) < Math.Min(_questionBoxes[k].Y + filter.GetLength(1), j + filter.GetLength(1));
-                            if (xIntersect&&yIntersect)
+                            blurred[i, j] += filter[i + p - 1, j + q - 1];
+                        }
+                    }
+                    blurred[i, j] /= 9;
+                }
+            }
+            float cutoff = 620, cutoff2 = 460;
+            int nextI = _imgWidth-filter.GetLength(0)-1;
+            for (int p = 3; p< _imgWidth - filter.GetLength(0)-4; p+=6)
+            {
+                for (int q = 3; q < _imgHeight-filter.GetLength(1)-4; q+=6)
+                {
+                    float val = GetFilterValue(blurred, p,q);
+                    if (val>cutoff2)
+                    {
+                        for (int i = p-3; i < p+3; i++)
+                        {
+                            for (int j = q-3; j < q+3; j++)
                             {
-                                if (val>_boxValues[k])
+                                val = GetFilterValue(filter, i,j);
+                                if (val > cutoff)
                                 {
-                                    _questionBoxes[k] = new Point(i, j);
-                                    _boxValues[k] = val;
+                                    bool b = true;
+                                    for (int k = 0; k < _questionBoxes.Count; ++k)
+                                    {
+                                        bool xIntersect = Math.Max(_questionBoxes[k].X, i) < Math.Min(_questionBoxes[k].X + filter.GetLength(0), i + filter.GetLength(0));
+                                        bool yIntersect = Math.Max(_questionBoxes[k].Y, j) < Math.Min(_questionBoxes[k].Y + filter.GetLength(1), j + filter.GetLength(1));
+                                        if (xIntersect && yIntersect)
+                                        {
+                                            if (val > _boxValues[k])
+                                            {
+                                                _questionBoxes[k] = new Point(i, j);
+                                                _boxValues[k] = val;
+                                            }
+                                            b = false; break;
+                                        }
+                                    }
+                                    if (b)
+                                    {
+                                        _boxValues.Add(val);
+                                        _questionBoxes.Add(new Point(i, j));
+                                    }
+                                    this.Text = "Found " + _questionBoxes.Count + " questionboxes";
                                 }
-                                b = false; break;
                             }
                         }
-                        if (b)
-                        {
-                            _boxValues.Add(val);
-                            _questionBoxes.Add(new Point(i, j));
-                        }
-                        this.Text = "Found " + _questionBoxes.Count + " questionboxes";
                     }
                 }
             }
@@ -343,6 +365,7 @@ namespace BubblesheetGrader
                 this.Text = corr + " out of " + total + " answers correct. " + Math.Round((float)(corr * 100 / total)) + "%";
 
             Refresh();
+            this.Text = BestSize.ToString();
         }
 
         private void LoadAnswers()
@@ -452,15 +475,15 @@ namespace BubblesheetGrader
             {
                 float f = (float)2e5 / _bubbleSheet.Width / _bubbleSheet.Height;
                 f = (float)Math.Sqrt(f);
-                e.Graphics.DrawImage(_bubbleSheet, 0,0, f*_bubbleSheet.Width,f*_bubbleSheet.Height);
-                for (int i = 0; i < _imgWidth; i++)
-                {
-                    for (int j = 0; j < _imgHeight; j++)
-                    {
-                        Brush p = new SolidBrush(Color.FromArgb((int)((_image[i, j] + 1) * 127), (int)((_image[i, j] + 1) * 127), (int)((_image[i, j] + 1) * 127)));
-                        e.Graphics.FillRectangle(p, i/2+f*_bubbleSheet.Width, j/2, 1, 1);
-                    }
-                }
+                e.Graphics.DrawImage(_bubbleSheet, 0,0);
+                //for (int i = 0; i < _imgWidth; i++)
+                //{
+                //    for (int j = 0; j < _imgHeight; j++)
+                //    {
+                //        Brush p = new SolidBrush(Color.FromArgb((int)((_image[i, j] + 1) * 127), (int)((_image[i, j] + 1) * 127), (int)((_image[i, j] + 1) * 127)));
+                //        e.Graphics.FillRectangle(p, i / 2 + f * _bubbleSheet.Width, j / 2, 1, 1);
+                //    }
+                //}
             }
             if (filterDone)
             {

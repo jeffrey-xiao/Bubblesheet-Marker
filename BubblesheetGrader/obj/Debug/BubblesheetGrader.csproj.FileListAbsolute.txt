@@ -7,3 +7,12 @@ C:\Users\Josh\Desktop\Projects\BubblesheetGrader\BubblesheetGrader\obj\Debug\Bub
 C:\Users\Josh\Desktop\Projects\BubblesheetGrader\BubblesheetGrader\obj\Debug\BubblesheetGrader.csproj.GenerateResource.Cache
 C:\Users\Josh\Desktop\Projects\BubblesheetGrader\BubblesheetGrader\obj\Debug\BubblesheetGrader.exe
 C:\Users\Josh\Desktop\Projects\BubblesheetGrader\BubblesheetGrader\obj\Debug\BubblesheetGrader.pdb
+C:\Users\Josh\Desktop\BubblesheetGrader\BubblesheetGrader\bin\Debug\BubblesheetGrader.exe.config
+C:\Users\Josh\Desktop\BubblesheetGrader\BubblesheetGrader\obj\Debug\BubblesheetGrader.exe
+C:\Users\Josh\Desktop\BubblesheetGrader\BubblesheetGrader\obj\Debug\BubblesheetGrader.pdb
+C:\Users\Josh\Desktop\BubblesheetGrader\BubblesheetGrader\bin\Debug\BubblesheetGrader.exe
+C:\Users\Josh\Desktop\BubblesheetGrader\BubblesheetGrader\bin\Debug\BubblesheetGrader.pdb
+C:\Users\Josh\Desktop\BubblesheetGrader\BubblesheetGrader\obj\Debug\BubblesheetGrader.csprojResolveAssemblyReference.cache
+C:\Users\Josh\Desktop\BubblesheetGrader\BubblesheetGrader\obj\Debug\BubblesheetGrader.Form1.resources
+C:\Users\Josh\Desktop\BubblesheetGrader\BubblesheetGrader\obj\Debug\BubblesheetGrader.Properties.Resources.resources
+C:\Users\Josh\Desktop\BubblesheetGrader\BubblesheetGrader\obj\Debug\BubblesheetGrader.csproj.GenerateResource.Cache
